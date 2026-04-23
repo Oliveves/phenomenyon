@@ -357,24 +357,7 @@ function Header({ isMobile }: { isMobile: boolean }) {
 
       <div style={{ display: "flex", alignItems: "center", gap: isMobile ? 20 : 28, color: COLORS.silver }}>
         <a
-          href="https://www.framer.com/marketplace/"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Framer Marketplace"
-          style={{ display: "flex", alignItems: "center", color: "inherit" }}
-        >
-          <svg
-            width="12"
-            height="18"
-            viewBox="44.65 33.992 50.7 76.049"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            <path d="M 44.65 33.992 L 95.35 33.992 L 95.35 59.341 L 70 59.341 Z M 44.65 59.341 L 70 59.341 L 95.35 84.691 L 44.65 84.691 Z M 44.65 84.691 L 70 84.691 L 70 110.041 Z" />
-          </svg>
-        </a>
-        <a
-          href="mailto:phenomenyon.stu@gmail.com"
+          href="mailto:phenomenyon@gmail.com"
           aria-label="Email"
           style={{ display: "flex", alignItems: "center", color: "inherit" }}
         >

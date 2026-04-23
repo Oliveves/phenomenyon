@@ -271,55 +271,17 @@ export default function SilkWavePage() {
         position: "relative",
         zIndex: 1,
       }}>
-        <p style={{
-          color: "#6B6B6B",
-          fontSize: "0.75rem",
-          letterSpacing: "0.4em",
-          textTransform: "uppercase",
-          marginBottom: "24px",
-          fontFamily: "'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
-        }}>
-          Available on
-        </p>
         <h2 style={{
           color: "#F0EDE8",
           fontSize: "clamp(2rem, 4vw, 5rem)",
           fontWeight: 300,
           fontStyle: "italic",
           fontFamily: "'Imbue', serif",
-          margin: isMobile ? "0 0 36px 0" : "0 0 48px 0",
+          margin: 0,
           textAlign: "center",
         }}>
-          Framer Marketplace
+          Purchase Coming Soon
         </h2>
-
-        <a
-          href="https://www.framer.com/marketplace/components/?q=silkwave"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: "inline-block",
-            padding: isMobile ? "14px 32px" : "16px 48px",
-            border: "1px solid #F0EDE8",
-            color: "#F0EDE8",
-            fontFamily: "'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, 'Noto Sans KR', sans-serif",
-            fontSize: isMobile ? "0.75rem" : "0.85rem",
-            letterSpacing: "0.3em",
-            textTransform: "uppercase",
-            textDecoration: "none",
-            transition: "all 0.3s",
-          }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLAnchorElement).style.background = "#F0EDE8"
-            ;(e.currentTarget as HTMLAnchorElement).style.color = "#0D0D0D"
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLAnchorElement).style.background = "transparent"
-            ;(e.currentTarget as HTMLAnchorElement).style.color = "#F0EDE8"
-          }}
-        >
-          View Components
-        </a>
 
         <p style={{
           color: "#3A3A3A",
