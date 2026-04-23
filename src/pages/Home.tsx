@@ -486,18 +486,18 @@ function EmptyState() {
   )
 }
 
-const THEMES = ["gold", "silver", "rose", "navy"] as const
+const THEMES = ["champagne", "platinum", "blush", "midnight"] as const
 
 const THEME_DOT: Record<(typeof THEMES)[number], string> = {
-  gold: "#B4913C",
-  silver: "#96AAB9",
-  rose: "#BE8282",
-  navy: "#5082C8",
+  champagne: "#B4913C",
+  platinum: "#96AAB9",
+  blush: "#BE8282",
+  midnight: "#5082C8",
 }
 
 function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
   const isSilkWave = item.id === "silk-wave"
-  const [activeTheme, setActiveTheme] = useState<(typeof THEMES)[number]>("gold")
+  const [activeTheme, setActiveTheme] = useState<(typeof THEMES)[number]>("champagne")
 
   return (
     <article

@@ -2,13 +2,13 @@ import { useEffect, useState } from "react"
 import SilkWave, { type ThemeKey } from "../../components/SilkWave"
 
 const themeTextColors: Record<ThemeKey, { title: string; sub: string }> = {
-  gold: { title: "#2A1F0E", sub: "#6B5A3E" },
-  silver: { title: "#1A2330", sub: "#4A5A6A" },
-  rose: { title: "#2A1010", sub: "#7A4A4A" },
-  navy: { title: "#F0F4FF", sub: "#8AA0C0" },
+  champagne: { title: "#2A1F0E", sub: "#6B5A3E" },
+  platinum: { title: "#1A2330", sub: "#4A5A6A" },
+  blush: { title: "#2A1010", sub: "#7A4A4A" },
+  midnight: { title: "#F0F4FF", sub: "#8AA0C0" },
 }
 
-const currentTheme: ThemeKey = "gold" // 여기서 테마 바꾸기
+const currentTheme: ThemeKey = "champagne" // 여기서 테마 바꾸기
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(
@@ -205,10 +205,10 @@ export default function SilkWavePage() {
           maxWidth: "1100px",
         }}>
           {[
-            { theme: "gold",   label: "Gold",   textColor: "#2A1F0E", subColor: "#6B5A3E" },
-            { theme: "silver", label: "Silver", textColor: "#1A2330", subColor: "#4A5A6A" },
-            { theme: "rose",   label: "Rose",   textColor: "#2A1010", subColor: "#7A4A4A" },
-            { theme: "navy",   label: "Navy",   textColor: "#F0F4FF", subColor: "#8AA0C0" },
+            { theme: "champagne", label: "Champagne", textColor: "#2A1F0E", subColor: "#6B5A3E" },
+            { theme: "platinum",  label: "Platinum",  textColor: "#1A2330", subColor: "#4A5A6A" },
+            { theme: "blush",     label: "Blush",     textColor: "#2A1010", subColor: "#7A4A4A" },
+            { theme: "midnight",  label: "Midnight",  textColor: "#F0F4FF", subColor: "#8AA0C0" },
           ].map((item) => (
             <div key={item.theme} style={{
               position: "relative",
