@@ -2,6 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import SilkWave from "../components/SilkWave"
+import ProWaitlist from "../components/ProWaitlist"
+import { COLORS, FONT_SANS, FONT_SERIF } from "../theme"
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(
@@ -18,22 +20,13 @@ function useIsMobile() {
   return isMobile
 }
 
-const FONT_SANS =
-  "'Geist', 'Pretendard Variable', Pretendard, 'Apple SD Gothic Neo', -apple-system, BlinkMacSystemFont, sans-serif"
-const FONT_SERIF = "'Imbue', serif"
-
 const HEADER_H = 72
 
-const COLORS = {
-  bg: "#080808",
-  text: "#F0EDE8",
-  silver: "#C0C0C0",
-  card: "#111111",
-  imageBg: "#000000",
-  border: "#1a1a1a",
+const UI = {
   catInactive: "#333",
   descText: "#999",
   soonText: "#333",
+  imageBg: "#000000",
 }
 
 type Item = {
@@ -58,7 +51,7 @@ const categories: Record<string, Category> = {
       {
         id: "silk-wave",
         name: "Silk Wave",
-        desc: "Animated silk wave background with grain texture. 4 themes.",
+        desc: "Free · MIT. Animated silk background with 4 themes.",
         path: "/components/silk-wave",
         available: true,
         date: "2026-04-21",
@@ -140,7 +133,6 @@ export default function Home() {
     return categories[activeCategory].items
   }, [isSearching, query, activeCategory])
 
-  // Wheel → horizontal scroll (desktop only)
   const scrollerRef = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     if (isMobile) return
@@ -160,8 +152,7 @@ export default function Home() {
     <div style={{
       background: COLORS.bg,
       width: "100vw",
-      height: "100vh",
-      overflow: "hidden",
+      minHeight: "100vh",
       color: COLORS.text,
       fontFamily: FONT_SANS,
     }}>
@@ -169,133 +160,141 @@ export default function Home() {
 
       <Header isMobile={isMobile} />
 
-      <main style={{
-        display: "flex",
-        flexDirection: isMobile ? "column" : "row",
-        height: `calc(100vh - ${HEADER_H}px)`,
-        marginTop: HEADER_H,
-        paddingBottom: isMobile ? 72 : 60,
-        boxSizing: "border-box",
+      <div style={{
+        position: "relative",
+        height: "100vh",
+        overflow: "hidden",
       }}>
-        <aside style={{
-          width: isMobile ? "100%" : "28%",
-          minWidth: isMobile ? 0 : 240,
-          flexShrink: 0,
-          borderRight: isMobile ? "none" : `1px solid ${COLORS.border}`,
-          borderBottom: isMobile ? `1px solid ${COLORS.border}` : "none",
-          padding: isMobile ? "20px 20px 18px" : "0 40px",
+        <main style={{
           display: "flex",
-          flexDirection: isMobile ? "row" : "column",
-          flexWrap: isMobile ? "wrap" : "nowrap",
-          justifyContent: "center",
-          alignItems: isMobile ? "center" : "stretch",
-          gap: isMobile ? "10px 20px" : 16,
-          overflow: "hidden",
-        }}
-        >
-          {CATEGORY_KEYS.map((k) => {
-            const isActive = !isSearching && activeCategory === k
-            return (
-              <button
-                key={k}
-                type="button"
-                onClick={() => {
-                  setActiveCategory(k)
-                  setQuery("")
-                }}
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  padding: isMobile ? "4px 2px" : 0,
-                  cursor: "pointer",
-                  textAlign: isMobile ? "center" : "left",
-                  fontFamily: FONT_SERIF,
-                  fontStyle: "italic",
-                  fontWeight: 300,
-                  fontSize: isMobile
-                    ? "1.25rem"
-                    : "clamp(2.5rem, 4vw, 5rem)",
-                  lineHeight: 1.1,
-                  color: isActive ? COLORS.text : COLORS.catInactive,
-                  borderBottom: isMobile
-                    ? `1px solid ${isActive ? COLORS.text : "transparent"}`
-                    : "none",
-                  transition: "color 0.25s, border-color 0.25s",
-                  whiteSpace: "nowrap",
-                  flexShrink: 0,
-                }}
-              >
-                {categories[k].label}
-              </button>
-            )
-          })}
-        </aside>
-
-        <section
-          ref={scrollerRef}
-          className="no-scrollbar"
-          style={{
-            flex: 1,
-            minHeight: 0,
-            height: isMobile ? "auto" : "100%",
-            width: isMobile ? "100%" : "auto",
-            overflowX: isMobile ? "hidden" : "auto",
-            overflowY: isMobile ? "auto" : "hidden",
+          flexDirection: isMobile ? "column" : "row",
+          height: `calc(100vh - ${HEADER_H}px)`,
+          marginTop: HEADER_H,
+          paddingBottom: isMobile ? 72 : 60,
+          boxSizing: "border-box",
+        }}>
+          <aside style={{
+            width: isMobile ? "100%" : "28%",
+            minWidth: isMobile ? 0 : 240,
+            flexShrink: 0,
+            borderRight: isMobile ? "none" : `1px solid ${COLORS.border}`,
+            borderBottom: isMobile ? `1px solid ${COLORS.border}` : "none",
+            padding: isMobile ? "20px 20px 18px" : "0 40px",
             display: "flex",
-            alignItems: isMobile ? "stretch" : "center",
+            flexDirection: isMobile ? "row" : "column",
+            flexWrap: isMobile ? "wrap" : "nowrap",
+            justifyContent: "center",
+            alignItems: isMobile ? "center" : "stretch",
+            gap: isMobile ? "10px 20px" : 16,
+            overflow: "hidden",
           }}
-        >
-          {displayItems.length === 0 ? (
-            <EmptyState />
-          ) : (
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={isSearching ? "__search" : activeCategory}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                variants={{
-                  hidden: {},
-                  visible: { transition: { staggerChildren: 0.08 } },
-                  exit: {},
-                }}
-                style={{
-                  display: "flex",
-                  flexDirection: isMobile ? "column" : "row",
-                  gap: isMobile ? 28 : 24,
-                  padding: isMobile ? "24px 20px" : "0 40px",
-                  alignItems: isMobile ? "stretch" : "center",
-                  width: isMobile ? "100%" : "auto",
-                  boxSizing: "border-box",
-                }}
-              >
-                {displayItems.map((it) => (
-                  <motion.div
-                    key={it.id}
-                    variants={{
-                      hidden: isMobile
-                        ? { y: 40, opacity: 0 }
-                        : { x: 60, opacity: 0 },
-                      visible: {
-                        x: 0,
-                        y: 0,
-                        opacity: 1,
-                        transition: { duration: 0.4, ease: "easeOut" },
-                      },
-                      exit: { opacity: 0, transition: { duration: 0.15 } },
-                    }}
-                    style={{ flexShrink: 0 }}
-                  >
-                    <Card item={it} isMobile={isMobile} />
-                  </motion.div>
-                ))}
-              </motion.div>
-            </AnimatePresence>
-          )}
-        </section>
-      </main>
+          >
+            {CATEGORY_KEYS.map((k) => {
+              const isActive = !isSearching && activeCategory === k
+              return (
+                <button
+                  key={k}
+                  type="button"
+                  onClick={() => {
+                    setActiveCategory(k)
+                    setQuery("")
+                  }}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    padding: isMobile ? "4px 2px" : 0,
+                    cursor: "pointer",
+                    textAlign: isMobile ? "center" : "left",
+                    fontFamily: FONT_SERIF,
+                    fontStyle: "italic",
+                    fontWeight: 300,
+                    fontSize: isMobile
+                      ? "1.25rem"
+                      : "clamp(2.5rem, 4vw, 5rem)",
+                    lineHeight: 1.1,
+                    color: isActive ? COLORS.text : UI.catInactive,
+                    borderBottom: isMobile
+                      ? `1px solid ${isActive ? COLORS.text : "transparent"}`
+                      : "none",
+                    transition: "color 0.25s, border-color 0.25s",
+                    whiteSpace: "nowrap",
+                    flexShrink: 0,
+                  }}
+                >
+                  {categories[k].label}
+                </button>
+              )
+            })}
+          </aside>
 
-      <SearchBar query={query} onChange={setQuery} isMobile={isMobile} />
+          <section
+            ref={scrollerRef}
+            className="no-scrollbar"
+            style={{
+              flex: 1,
+              minHeight: 0,
+              height: isMobile ? "auto" : "100%",
+              width: isMobile ? "100%" : "auto",
+              overflowX: isMobile ? "hidden" : "auto",
+              overflowY: isMobile ? "auto" : "hidden",
+              display: "flex",
+              alignItems: isMobile ? "stretch" : "center",
+            }}
+          >
+            {displayItems.length === 0 ? (
+              <EmptyState />
+            ) : (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={isSearching ? "__search" : activeCategory}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  variants={{
+                    hidden: {},
+                    visible: { transition: { staggerChildren: 0.08 } },
+                    exit: {},
+                  }}
+                  style={{
+                    display: "flex",
+                    flexDirection: isMobile ? "column" : "row",
+                    gap: isMobile ? 28 : 24,
+                    padding: isMobile ? "24px 20px" : "0 40px",
+                    alignItems: isMobile ? "stretch" : "center",
+                    width: isMobile ? "100%" : "auto",
+                    boxSizing: "border-box",
+                  }}
+                >
+                  {displayItems.map((it) => (
+                    <motion.div
+                      key={it.id}
+                      variants={{
+                        hidden: isMobile
+                          ? { y: 40, opacity: 0 }
+                          : { x: 60, opacity: 0 },
+                        visible: {
+                          x: 0,
+                          y: 0,
+                          opacity: 1,
+                          transition: { duration: 0.4, ease: "easeOut" },
+                        },
+                        exit: { opacity: 0, transition: { duration: 0.15 } },
+                      }}
+                      style={{ flexShrink: 0 }}
+                    >
+                      <Card item={it} isMobile={isMobile} />
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            )}
+          </section>
+        </main>
+
+        <SearchBar query={query} onChange={setQuery} isMobile={isMobile} />
+      </div>
+
+      <ProWaitlist source="home" isMobile={isMobile} />
     </div>
   )
 }
@@ -416,7 +415,7 @@ function SearchBar({
   return (
     <div
       style={{
-        position: "fixed",
+        position: "absolute",
         left: isMobile ? 20 : 40,
         right: isMobile ? 20 : "auto",
         bottom: isMobile ? 20 : 32,
@@ -526,7 +525,7 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
               fontStyle: "italic",
               fontWeight: 300,
               fontSize: "1.4rem",
-              color: item.available ? COLORS.text : COLORS.soonText,
+              color: item.available ? COLORS.text : UI.soonText,
               margin: 0,
               lineHeight: 1.1,
             }}
@@ -539,7 +538,7 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
               fontFamily: FONT_SANS,
               fontSize: "0.8rem",
               lineHeight: 1.45,
-              color: item.available ? COLORS.descText : COLORS.soonText,
+              color: item.available ? UI.descText : UI.soonText,
               margin: 0,
             }}
           >
@@ -590,7 +589,7 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
         style={{
           width: "100%",
           aspectRatio: "21 / 9",
-          background: COLORS.imageBg,
+          background: UI.imageBg,
           borderRadius: 8,
           overflow: "hidden",
           position: "relative",
@@ -610,7 +609,7 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
               fontSize: "0.8rem",
               letterSpacing: "0.3em",
               textTransform: "uppercase",
-              color: COLORS.soonText,
+              color: UI.soonText,
             }}
           >
             Coming Soon

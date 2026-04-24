@@ -1,37 +1,7 @@
 import { useEffect, useRef } from "react"
+import { SILKWAVE_THEMES, type ThemeKey } from "../../theme"
 
-const themes = {
-    champagne: {
-        bg1: "#FFFFFF",
-        bg2: "#F5F0E8",
-        bg3: "#EDE4D0",
-        lineColor: "180, 145, 60",
-        glowColor: "255, 240, 180",
-    },
-    platinum: {
-        bg1: "#FFFFFF",
-        bg2: "#F2F4F6",
-        bg3: "#E2E8ED",
-        lineColor: "150, 170, 185",
-        glowColor: "220, 235, 245",
-    },
-    blush: {
-        bg1: "#FFFFFF",
-        bg2: "#F9F0F0",
-        bg3: "#EED8D8",
-        lineColor: "190, 130, 130",
-        glowColor: "255, 210, 200",
-    },
-    midnight: {
-        bg1: "#0A0F1E",
-        bg2: "#0D1528",
-        bg3: "#111D35",
-        lineColor: "80, 130, 200",
-        glowColor: "100, 160, 255",
-    },
-}
-
-export type ThemeKey = keyof typeof themes
+export type { ThemeKey }
 
 export default function SilkWave({
     speed = 0.008,
@@ -58,7 +28,7 @@ export default function SilkWave({
         let width = 0
         let height = 0
 
-        const t_ = themes[theme]
+        const t_ = SILKWAVE_THEMES[theme]
 
         const noiseCanvas = document.createElement("canvas")
         noiseCanvas.width = 256
