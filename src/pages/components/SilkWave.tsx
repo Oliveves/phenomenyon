@@ -15,10 +15,11 @@ import {
 const GITHUB_URL = "https://github.com/Oliveves/phenomenyon-components"
 const RELEASE_URL =
   "https://github.com/Oliveves/phenomenyon-components/releases/tag/v0.1.0"
+
 const CDN_SNIPPET = `<script src="https://cdn.jsdelivr.net/gh/Oliveves/phenomenyon-components@v0.1.0/silkwave-html/silkwave.min.js"></script>
 <div data-silkwave="champagne"></div>`
 
-const REACT_INSTALL_SNIPPET = `// Download from GitHub Release
+const REACT_INSTALL_SNIPPET = `# Download from GitHub Release
 https://github.com/Oliveves/phenomenyon-components/releases/tag/v0.1.0`
 
 const REACT_USAGE_SNIPPET = `import SilkWave from "./SilkWave"
@@ -26,8 +27,6 @@ const REACT_USAGE_SNIPPET = `import SilkWave from "./SilkWave"
 export default function Hero() {
   return <SilkWave theme="champagne" />
 }`
-
-const NAV_H = 60
 
 const PLATFORMS = ["Webflow", "WordPress", "Shopify", "Framer", "custom HTML"]
 
@@ -39,6 +38,38 @@ const THEME_MOODS: Record<ThemeKey, string> = {
 }
 
 const THEME_ORDER: ThemeKey[] = ["champagne", "platinum", "blush", "midnight"]
+
+/* Detail-page typography overrides (upsized per spec) */
+const LABEL_LG = {
+  ...TYPE.label,
+  fontSize: "14px",
+}
+const H2_DETAIL = {
+  fontFamily: FONT_SERIF,
+  fontWeight: 300,
+  fontStyle: "italic" as const,
+  fontSize: "clamp(36px, 5.5vw, 64px)",
+  lineHeight: 1.05,
+  letterSpacing: "-0.01em",
+}
+const H3_DETAIL = {
+  fontFamily: FONT_SERIF,
+  fontWeight: 300,
+  fontStyle: "italic" as const,
+  fontSize: "clamp(26px, 3.5vw, 38px)",
+  lineHeight: 1.1,
+  letterSpacing: "-0.01em",
+}
+const BODY_LG = {
+  fontFamily: FONT_SANS,
+  fontSize: "16px",
+  fontWeight: 300,
+  lineHeight: 1.65,
+}
+const TAG_LG = {
+  ...TYPE.tag,
+  fontSize: "19px",
+}
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(
@@ -59,12 +90,10 @@ export default function SilkWavePage() {
   const isMobile = useIsMobile()
   return (
     <div style={{ overflowX: "hidden", background: COLORS.bg }}>
-      <TopNav isMobile={isMobile} />
+      <FloatingNav />
       <HeroSection isMobile={isMobile} />
-      <DropInSection isMobile={isMobile} />
+      <InstallSection isMobile={isMobile} />
       <ThemesShowcase isMobile={isMobile} />
-      <JSAPISection isMobile={isMobile} />
-      <ReactInstallSection isMobile={isMobile} />
       <PropsSection isMobile={isMobile} />
       <ProWaitlist source="silk-wave-detail" isMobile={isMobile} />
       <FooterSection isMobile={isMobile} />
@@ -72,51 +101,53 @@ export default function SilkWavePage() {
   )
 }
 
-/* ---------- Section 0 · Top nav ---------- */
+/* ---------- Floating top nav ---------- */
 
-function TopNav({ isMobile }: { isMobile: boolean }) {
+function FloatingNav() {
+  const linkStyle: React.CSSProperties = {
+    fontFamily: FONT_MONO,
+    fontSize: 14,
+    letterSpacing: "0.05em",
+    textTransform: "uppercase",
+    color: "inherit",
+    textDecoration: "none",
+  }
   return (
     <nav
       style={{
         position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        height: NAV_H,
+        top: 24,
+        left: 24,
+        right: 24,
+        zIndex: 100,
         display: "flex",
-        alignItems: "center",
         justifyContent: "space-between",
-        padding: isMobile ? "0 18px" : "0 28px",
-        background: "rgba(8, 8, 8, 0.55)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-        borderBottom: `1px solid rgba(255,255,255,0.06)`,
-        zIndex: 200,
+        alignItems: "center",
+        padding: "12px 20px",
+        borderRadius: 999,
+        background: "rgba(255, 255, 255, 0.05)",
+        border: "1px solid rgba(255, 255, 255, 0.45)",
+        color: "#ffffff",
+        mixBlendMode: "difference",
+        transition: "background 0.2s",
+      }}
+      onMouseEnter={(e) => {
+        ;(e.currentTarget as HTMLElement).style.background =
+          "rgba(255, 255, 255, 0.14)"
+      }}
+      onMouseLeave={(e) => {
+        ;(e.currentTarget as HTMLElement).style.background =
+          "rgba(255, 255, 255, 0.05)"
       }}
     >
-      <Link
-        to="/"
-        style={{
-          ...TYPE.label,
-          color: COLORS.text,
-          textDecoration: "none",
-          display: "inline-flex",
-          alignItems: "center",
-          gap: 10,
-        }}
-      >
-        <span aria-hidden>←</span>
-        <span>phenomenyon</span>
+      <Link to="/" style={linkStyle}>
+        <span aria-hidden>←</span> phenomenyon
       </Link>
       <a
         href={GITHUB_URL}
         target="_blank"
         rel="noopener noreferrer"
-        style={{
-          ...TYPE.label,
-          color: COLORS.text,
-          textDecoration: "none",
-        }}
+        style={linkStyle}
       >
         GitHub
       </a>
@@ -124,10 +155,12 @@ function TopNav({ isMobile }: { isMobile: boolean }) {
   )
 }
 
-/* ---------- Section 1 · Hero ---------- */
+/* ---------- Section 1 · Hero + theme switcher ---------- */
 
 function HeroSection({ isMobile }: { isMobile: boolean }) {
-  const textColor = THEME_TEXT_COLOR.champagne
+  const [theme, setTheme] = useState<ThemeKey>("champagne")
+  const textColor = THEME_TEXT_COLOR[theme]
+
   return (
     <section
       style={{
@@ -137,56 +170,114 @@ function HeroSection({ isMobile }: { isMobile: boolean }) {
         overflow: "hidden",
       }}
     >
-      <SilkWave fill theme="champagne" speed={0.008} noiseOpacity={0.02} />
+      <SilkWave fill theme={theme} speed={0.008} noiseOpacity={0.02} />
 
+      {/* top-left label */}
+      <div
+        style={{
+          position: "absolute",
+          top: isMobile ? 88 : 96,
+          left: isMobile ? 24 : 48,
+          zIndex: 1,
+          ...LABEL_LG,
+          color: textColor,
+          opacity: 0.75,
+          pointerEvents: "none",
+        }}
+      >
+        01 · Silk Wave
+      </div>
+
+      {/* centered h1 */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          padding: isMobile ? `${NAV_H + 32}px 24px 32px` : `${NAV_H + 40}px 48px 48px`,
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: isMobile ? "0 24px" : "0 48px",
           zIndex: 1,
           pointerEvents: "none",
         }}
       >
-        <div style={{ ...TYPE.label, color: textColor, opacity: 0.7 }}>
-          01 · Data-attribute · Auto-init
-        </div>
-
         <h1
           style={{
             ...TYPE.h1,
-            color: textColor,
             fontStyle: "italic",
+            color: textColor,
             margin: 0,
             textAlign: "center",
-            alignSelf: "center",
           }}
         >
           Silk that breathes.
         </h1>
+      </div>
 
-        <p
-          style={{
-            ...TYPE.tag,
-            color: textColor,
-            opacity: 0.75,
-            margin: 0,
-            maxWidth: 640,
-          }}
-        >
-          Animated silk wave background with grain texture. Free. MIT.
-        </p>
+      {/* dot-indicator theme switcher */}
+      <div
+        style={{
+          position: "absolute",
+          left: "50%",
+          bottom: isMobile ? 60 : 80,
+          transform: "translateX(-50%)",
+          display: "flex",
+          gap: isMobile ? 24 : 60,
+          zIndex: 2,
+        }}
+      >
+        {THEME_ORDER.map((t) => {
+          const active = theme === t
+          return (
+            <button
+              key={t}
+              type="button"
+              aria-label={`${t} theme`}
+              aria-pressed={active}
+              onClick={() => setTheme(t)}
+              style={{
+                position: "relative",
+                background: "transparent",
+                border: "none",
+                padding: "14px 6px 8px",
+                cursor: "pointer",
+                fontFamily: FONT_MONO,
+                fontSize: isMobile ? 12 : 14,
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+                color: textColor,
+                opacity: active ? 1 : 0.5,
+                transition: "opacity 0.25s",
+                outline: "none",
+              }}
+            >
+              <span
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: 4,
+                  height: 4,
+                  borderRadius: "50%",
+                  background: "currentColor",
+                  opacity: active ? 1 : 0,
+                  transition: "opacity 0.3s ease",
+                }}
+              />
+              {t}
+            </button>
+          )
+        })}
       </div>
     </section>
   )
 }
 
-/* ---------- Section 2 · Drop-in install ---------- */
+/* ---------- Section 2 · Install (Drop-in + React) ---------- */
 
-function DropInSection({ isMobile }: { isMobile: boolean }) {
+function InstallSection({ isMobile }: { isMobile: boolean }) {
   return (
     <section
       style={{
@@ -194,56 +285,120 @@ function DropInSection({ isMobile }: { isMobile: boolean }) {
         minHeight: "100vh",
         background: COLORS.bgLight,
         color: COLORS.textDark,
-        padding: isMobile ? "96px 24px" : "140px 60px",
+        padding: isMobile ? "80px 24px" : "120px 60px",
         boxSizing: "border-box",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: isMobile ? 40 : 56,
       }}
     >
-      <div style={{ textAlign: "center", maxWidth: 900 }}>
-        <p style={{ ...TYPE.label, color: COLORS.textDark, opacity: 0.55 }}>
-          02 · Drop-in Usage
-        </p>
-        <h2
-          style={{
-            ...TYPE.h1,
-            fontStyle: "italic",
-            color: COLORS.textDark,
-            margin: "24px 0 0",
-          }}
-        >
-          One line. Any site.
-        </h2>
-      </div>
-
-      <CodeBlock code={CDN_SNIPPET} lightMode />
-
       <div
         style={{
+          width: "100%",
+          maxWidth: 1200,
+          marginInline: "auto",
           display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          gap: isMobile ? 10 : 14,
+          flexDirection: "column",
+          gap: 60,
         }}
       >
-        {PLATFORMS.map((p) => (
-          <span
-            key={p}
+        <div>
+          <p style={{ ...LABEL_LG, color: COLORS.textDark, opacity: 0.55 }}>
+            02 · Install
+          </p>
+          <p
             style={{
-              ...TYPE.label,
+              ...TAG_LG,
               color: COLORS.textDark,
-              opacity: 0.7,
-              border: `1px solid rgba(27,27,27,0.15)`,
-              borderRadius: 999,
-              padding: "6px 14px",
+              opacity: 0.85,
+              margin: "28px 0 0",
+              maxWidth: 640,
             }}
           >
-            {p}
-          </span>
-        ))}
+            Animated silk wave background with grain texture. Free. MIT.
+          </p>
+        </div>
+
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+            gap: isMobile ? 40 : 60,
+            alignItems: "start",
+          }}
+        >
+          {/* Block A — Drop-in */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 20,
+              minWidth: 0,
+            }}
+          >
+            <p style={{ ...LABEL_LG, color: COLORS.textDark, opacity: 0.6 }}>
+              Drop-in
+            </p>
+            <h2
+              style={{
+                ...H3_DETAIL,
+                color: COLORS.textDark,
+                margin: 0,
+              }}
+            >
+              One line. Any site.
+            </h2>
+            <CodeBlock code={CDN_SNIPPET} lightMode />
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 10,
+                marginTop: 4,
+              }}
+            >
+              {PLATFORMS.map((p) => (
+                <span
+                  key={p}
+                  style={{
+                    ...LABEL_LG,
+                    color: COLORS.textDark,
+                    opacity: 0.7,
+                    border: "1px solid rgba(27,27,27,0.15)",
+                    borderRadius: 999,
+                    padding: "6px 14px",
+                  }}
+                >
+                  {p}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Block B — React */}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 20,
+              minWidth: 0,
+            }}
+          >
+            <p style={{ ...LABEL_LG, color: COLORS.textDark, opacity: 0.6 }}>
+              React
+            </p>
+            <h2
+              style={{
+                ...H3_DETAIL,
+                color: COLORS.textDark,
+                margin: 0,
+              }}
+            >
+              For React projects.
+            </h2>
+            <CodeBlock code={REACT_INSTALL_SNIPPET} lightMode />
+            <CodeBlock code={REACT_USAGE_SNIPPET} lightMode />
+          </div>
+        </div>
       </div>
     </section>
   )
@@ -257,21 +412,21 @@ function ThemesShowcase({ isMobile }: { isMobile: boolean }) {
       style={{
         width: "100vw",
         background: COLORS.bg,
+        padding: isMobile ? "80px 0 100px" : "120px 0 140px",
       }}
     >
       <div
         style={{
-          padding: isMobile ? "80px 24px 40px" : "120px 60px 60px",
+          padding: isMobile ? "0 24px 56px" : "0 60px 72px",
           textAlign: "center",
         }}
       >
-        <p style={{ ...TYPE.label, color: COLORS.silver, opacity: 0.7 }}>
+        <p style={{ ...LABEL_LG, color: COLORS.silver, opacity: 0.7 }}>
           03 · Themes
         </p>
         <h2
           style={{
-            ...TYPE.h1,
-            fontStyle: "italic",
+            ...H2_DETAIL,
             color: COLORS.text,
             margin: "24px 0 0",
           }}
@@ -293,12 +448,7 @@ function ThemesShowcase({ isMobile }: { isMobile: boolean }) {
                 overflow: "hidden",
               }}
             >
-              <SilkWave
-                fill
-                theme={theme}
-                speed={0.006}
-                noiseOpacity={0.02}
-              />
+              <SilkWave fill theme={theme} speed={0.006} noiseOpacity={0.02} />
               <div
                 style={{
                   position: "absolute",
@@ -313,7 +463,7 @@ function ThemesShowcase({ isMobile }: { isMobile: boolean }) {
               >
                 <span
                   style={{
-                    ...TYPE.label,
+                    ...LABEL_LG,
                     color: textColor,
                     opacity: 0.85,
                   }}
@@ -326,8 +476,8 @@ function ThemesShowcase({ isMobile }: { isMobile: boolean }) {
                     fontStyle: "italic",
                     fontWeight: 300,
                     fontSize: isMobile
-                      ? "clamp(1.4rem, 5vw, 1.8rem)"
-                      : "clamp(2rem, 3.5vw, 3rem)",
+                      ? "clamp(1.6rem, 5vw, 2rem)"
+                      : "clamp(2.2rem, 3.8vw, 3.2rem)",
                     color: textColor,
                     textAlign: "right",
                     letterSpacing: "-0.01em",
@@ -344,166 +494,7 @@ function ThemesShowcase({ isMobile }: { isMobile: boolean }) {
   )
 }
 
-/* ---------- Section 4 · JS API ---------- */
-
-function JSAPISection({ isMobile }: { isMobile: boolean }) {
-  const [theme, setTheme] = useState<ThemeKey>("platinum")
-  const textColor = THEME_TEXT_COLOR[theme]
-
-  return (
-    <section
-      style={{
-        position: "relative",
-        width: "100vw",
-        minHeight: "100vh",
-        overflow: "hidden",
-      }}
-    >
-      <SilkWave
-        key={theme}
-        fill
-        theme={theme}
-        speed={0.008}
-        noiseOpacity={0.02}
-      />
-
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          padding: isMobile ? "120px 24px 80px" : "160px 60px 120px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: isMobile ? 28 : 40,
-          zIndex: 1,
-        }}
-      >
-        <p style={{ ...TYPE.label, color: textColor, opacity: 0.7 }}>
-          04 · JS API · setTheme()
-        </p>
-
-        <h2
-          style={{
-            ...TYPE.h1,
-            fontStyle: "italic",
-            color: textColor,
-            textAlign: "center",
-            margin: 0,
-          }}
-        >
-          Choose your fabric.
-        </h2>
-
-        <p
-          style={{
-            ...TYPE.tag,
-            color: textColor,
-            opacity: 0.75,
-            textAlign: "center",
-            margin: 0,
-            maxWidth: 620,
-          }}
-        >
-          Runtime theme switching without re-instantiating.
-        </p>
-
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            gap: 10,
-            marginTop: 8,
-          }}
-        >
-          {THEME_ORDER.map((t) => {
-            const active = theme === t
-            return (
-              <button
-                key={t}
-                type="button"
-                onClick={() => setTheme(t)}
-                style={{
-                  ...TYPE.button,
-                  background: active ? textColor : "transparent",
-                  color: active
-                    ? theme === "midnight"
-                      ? COLORS.textDark
-                      : COLORS.bgLight
-                    : textColor,
-                  border: `1px solid ${textColor}`,
-                  borderRadius: 999,
-                  padding: "9px 18px",
-                  cursor: "pointer",
-                  letterSpacing: "0.04em",
-                  textTransform: "capitalize",
-                  transition: "background 0.2s, color 0.2s",
-                }}
-              >
-                {t}
-              </button>
-            )
-          })}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-/* ---------- Section 5 · React install ---------- */
-
-function ReactInstallSection({ isMobile }: { isMobile: boolean }) {
-  return (
-    <section
-      style={{
-        width: "100vw",
-        minHeight: "100vh",
-        background: COLORS.bgLight,
-        color: COLORS.textDark,
-        padding: isMobile ? "96px 24px" : "140px 60px",
-        boxSizing: "border-box",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: isMobile ? 32 : 48,
-      }}
-    >
-      <div style={{ textAlign: "center", maxWidth: 900 }}>
-        <p style={{ ...TYPE.label, color: COLORS.textDark, opacity: 0.55 }}>
-          05 · React
-        </p>
-        <h2
-          style={{
-            ...TYPE.h1,
-            fontStyle: "italic",
-            color: COLORS.textDark,
-            margin: "24px 0 0",
-          }}
-        >
-          For React projects.
-        </h2>
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 20,
-          width: "100%",
-          maxWidth: 820,
-        }}
-      >
-        <CodeBlock code={REACT_INSTALL_SNIPPET} lightMode />
-        <CodeBlock code={REACT_USAGE_SNIPPET} lightMode />
-      </div>
-    </section>
-  )
-}
-
-/* ---------- Section 6 · Props ---------- */
+/* ---------- Section 4 · Props ---------- */
 
 type PropRow = { name: string; type: string; def: string; desc: string }
 const PROPS: PropRow[] = [
@@ -550,13 +541,12 @@ function PropsSection({ isMobile }: { isMobile: boolean }) {
       }}
     >
       <div style={{ textAlign: "center", maxWidth: 900 }}>
-        <p style={{ ...TYPE.label, color: COLORS.silver, opacity: 0.7 }}>
-          06 · API
+        <p style={{ ...LABEL_LG, color: COLORS.silver, opacity: 0.7 }}>
+          04 · API
         </p>
         <h2
           style={{
-            ...TYPE.h1,
-            fontStyle: "italic",
+            ...H2_DETAIL,
             color: COLORS.text,
             margin: "24px 0 0",
           }}
@@ -578,9 +568,9 @@ function PropsSection({ isMobile }: { isMobile: boolean }) {
             key={p.name}
             style={{
               display: "grid",
-              gridTemplateColumns: isMobile ? "1fr" : "180px 1fr 180px",
-              gap: isMobile ? 10 : 24,
-              padding: isMobile ? "24px 0" : "28px 0",
+              gridTemplateColumns: isMobile ? "1fr" : "200px 1fr 200px",
+              gap: isMobile ? 10 : 28,
+              padding: isMobile ? "28px 0" : "32px 0",
               borderTop: idx === 0 ? `1px solid ${COLORS.border}` : "none",
               borderBottom: `1px solid ${COLORS.border}`,
               alignItems: "baseline",
@@ -588,7 +578,7 @@ function PropsSection({ isMobile }: { isMobile: boolean }) {
           >
             <div
               style={{
-                ...TYPE.label,
+                ...LABEL_LG,
                 color: COLORS.text,
               }}
             >
@@ -598,7 +588,7 @@ function PropsSection({ isMobile }: { isMobile: boolean }) {
               <code
                 style={{
                   fontFamily: FONT_MONO,
-                  fontSize: "0.8rem",
+                  fontSize: "0.95rem",
                   color: COLORS.silver,
                   wordBreak: "break-word",
                 }}
@@ -607,12 +597,9 @@ function PropsSection({ isMobile }: { isMobile: boolean }) {
               </code>
               <p
                 style={{
-                  fontFamily: FONT_SANS,
-                  fontSize: "0.9rem",
-                  fontWeight: 300,
+                  ...BODY_LG,
                   color: COLORS.silver,
-                  marginTop: 10,
-                  lineHeight: 1.55,
+                  marginTop: 12,
                 }}
               >
                 {p.desc}
@@ -621,7 +608,7 @@ function PropsSection({ isMobile }: { isMobile: boolean }) {
             <div
               style={{
                 fontFamily: FONT_MONO,
-                fontSize: "0.75rem",
+                fontSize: "0.85rem",
                 color: COLORS.silver,
                 opacity: 0.7,
                 textAlign: isMobile ? "left" : "right",
@@ -636,7 +623,7 @@ function PropsSection({ isMobile }: { isMobile: boolean }) {
   )
 }
 
-/* ---------- Section 8 · Footer ---------- */
+/* ---------- Section 6 · Footer ---------- */
 
 function FooterSection({ isMobile }: { isMobile: boolean }) {
   return (
@@ -655,7 +642,7 @@ function FooterSection({ isMobile }: { isMobile: boolean }) {
         gap: isMobile ? 18 : 16,
       }}
     >
-      <div style={{ ...TYPE.label, color: COLORS.silver, opacity: 0.6 }}>
+      <div style={{ ...LABEL_LG, color: COLORS.silver, opacity: 0.6 }}>
         © Phenomenyon 2026
       </div>
 
@@ -667,7 +654,7 @@ function FooterSection({ isMobile }: { isMobile: boolean }) {
           gap: isMobile ? 10 : 24,
         }}
       >
-        <span style={{ ...TYPE.label, color: COLORS.silver, opacity: 0.6 }}>
+        <span style={{ ...LABEL_LG, color: COLORS.silver, opacity: 0.6 }}>
           MIT License
         </span>
         <a
@@ -675,7 +662,7 @@ function FooterSection({ isMobile }: { isMobile: boolean }) {
           target="_blank"
           rel="noopener noreferrer"
           style={{
-            ...TYPE.label,
+            ...LABEL_LG,
             color: COLORS.silver,
             textDecoration: "none",
           }}
@@ -687,7 +674,7 @@ function FooterSection({ isMobile }: { isMobile: boolean }) {
           target="_blank"
           rel="noopener noreferrer"
           style={{
-            ...TYPE.label,
+            ...LABEL_LG,
             color: COLORS.silver,
             textDecoration: "none",
           }}
@@ -707,7 +694,7 @@ function FooterSection({ isMobile }: { isMobile: boolean }) {
         <a
           href="mailto:phenomenyon@gmail.com"
           style={{
-            ...TYPE.label,
+            ...LABEL_LG,
             color: COLORS.silver,
             textDecoration: "none",
           }}
@@ -719,7 +706,7 @@ function FooterSection({ isMobile }: { isMobile: boolean }) {
           target="_blank"
           rel="noopener noreferrer"
           style={{
-            ...TYPE.label,
+            ...LABEL_LG,
             color: COLORS.silver,
             textDecoration: "none",
           }}
@@ -755,7 +742,6 @@ function CodeBlock({ code, lightMode }: { code: string; lightMode?: boolean }) {
       style={{
         position: "relative",
         width: "100%",
-        maxWidth: 820,
         background: bg,
         border: `1px solid ${border}`,
         borderRadius: 12,
@@ -770,7 +756,7 @@ function CodeBlock({ code, lightMode }: { code: string; lightMode?: boolean }) {
           position: "absolute",
           top: 12,
           right: 12,
-          ...TYPE.label,
+          ...LABEL_LG,
           background: "transparent",
           color: text,
           opacity: 0.6,
@@ -787,7 +773,7 @@ function CodeBlock({ code, lightMode }: { code: string; lightMode?: boolean }) {
         style={{
           margin: 0,
           fontFamily: FONT_MONO,
-          fontSize: "0.82rem",
+          fontSize: "0.9rem",
           lineHeight: 1.65,
           color: text,
           whiteSpace: "pre-wrap",

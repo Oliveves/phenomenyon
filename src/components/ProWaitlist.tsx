@@ -78,7 +78,9 @@ export default function ProWaitlist({
           maxWidth: 820,
         }}
       >
-        Premium components &amp; templates — for editorial brands.
+        Premium components &amp; templates
+        <br />
+        &mdash; for editorial brands.
       </h2>
 
       <p

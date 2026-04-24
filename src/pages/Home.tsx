@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import SilkWave from "../components/SilkWave"
 import ProWaitlist from "../components/ProWaitlist"
-import { COLORS, FONT_SANS, FONT_SERIF } from "../theme"
+import { COLORS, FONT_SANS, FONT_SERIF, TYPE } from "../theme"
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(
@@ -496,10 +496,26 @@ const THEME_DOT: Record<(typeof THEMES)[number], string> = {
 
 function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
   const isSilkWave = item.id === "silk-wave"
+  const clickable = item.available && !!item.path
+  const navigate = useNavigate()
   const [activeTheme, setActiveTheme] = useState<(typeof THEMES)[number]>("champagne")
+
+  const onCardActivate = () => {
+    if (clickable && item.path) navigate(item.path)
+  }
 
   return (
     <article
+      onClick={onCardActivate}
+      onKeyDown={(e) => {
+        if (!clickable) return
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault()
+          onCardActivate()
+        }
+      }}
+      role={clickable ? "link" : undefined}
+      tabIndex={clickable ? 0 : undefined}
       style={{
         width: isMobile ? "100%" : 540,
         maxWidth: isMobile ? 480 : undefined,
@@ -508,6 +524,8 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
         display: "flex",
         flexDirection: "column",
         gap: isMobile ? 12 : 16,
+        cursor: clickable ? "pointer" : "default",
+        outline: "none",
       }}
     >
       <div
@@ -524,7 +542,7 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
               fontFamily: FONT_SERIF,
               fontStyle: "italic",
               fontWeight: 300,
-              fontSize: "1.4rem",
+              fontSize: "1.7rem",
               color: item.available ? COLORS.text : UI.soonText,
               margin: 0,
               lineHeight: 1.1,
@@ -536,7 +554,7 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
             style={{
               marginTop: 6,
               fontFamily: FONT_SANS,
-              fontSize: "0.8rem",
+              fontSize: "0.9rem",
               lineHeight: 1.45,
               color: item.available ? UI.descText : UI.soonText,
               margin: 0,
@@ -561,7 +579,10 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
                     type="button"
                     aria-label={`${t} theme`}
                     aria-pressed={active}
-                    onClick={() => setActiveTheme(t)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setActiveTheme(t)
+                    }}
                     style={{
                       width: 14,
                       height: 14,
@@ -615,6 +636,28 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
             Coming Soon
           </div>
         )}
+
+        {isSilkWave && item.available && (
+          <span
+            style={{
+              position: "absolute",
+              top: 12,
+              right: 12,
+              zIndex: 2,
+              ...TYPE.label,
+              fontSize: "10px",
+              padding: "4px 8px",
+              border: "1px solid rgba(240, 237, 232, 0.4)",
+              borderRadius: 999,
+              color: "rgba(240, 237, 232, 0.9)",
+              background: "rgba(0, 0, 0, 0.2)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+            }}
+          >
+            FREE
+          </span>
+        )}
       </div>
     </article>
   )
@@ -633,7 +676,7 @@ function ViewButton({ item }: { item: Item }) {
     padding: "5px 14px",
     fontFamily: FONT_SANS,
     fontWeight: 400,
-    fontSize: "0.72rem",
+    fontSize: "0.9rem",
     letterSpacing: "0.08em",
     textDecoration: "none",
     whiteSpace: "nowrap",
