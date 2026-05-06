@@ -90,9 +90,10 @@ const categories: Record<string, Category> = {
 const CATEGORY_KEYS = Object.keys(categories)
 
 export default function Home() {
-  const [splash, setSplash] = useState(
-    () => !sessionStorage.getItem("splashShown")
-  )
+  const [splash, setSplash] = useState(() => {
+    if (typeof window === "undefined") return false
+    return !sessionStorage.getItem("splashShown")
+  })
   const [fading, setFading] = useState(false)
 
   useEffect(() => {
@@ -100,7 +101,9 @@ export default function Home() {
     const fade = setTimeout(() => setFading(true), 1500)
     const unmount = setTimeout(() => {
       setSplash(false)
-      sessionStorage.setItem("splashShown", "1")
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("splashShown", "1")
+      }
     }, 2000)
     return () => {
       clearTimeout(fade)
