@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import SilkWave from "../../components/SilkWave"
-import ProWaitlist from "../../components/ProWaitlist"
 import {
   COLORS,
   FONT_MONO,
@@ -95,7 +94,6 @@ export default function SilkWavePage() {
       <InstallSection isMobile={isMobile} />
       <ThemesShowcase isMobile={isMobile} />
       <PropsSection isMobile={isMobile} />
-      <ProWaitlist source="silk-wave-detail" isMobile={isMobile} />
       <FooterSection isMobile={isMobile} />
     </div>
   )
