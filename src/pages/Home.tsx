@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import SilkWave from "../components/SilkWave"
-import ProWaitlist from "../components/ProWaitlist"
 import { COLORS, FONT_SANS, FONT_SERIF, TYPE } from "../theme"
 
 function useIsMobile() {
@@ -296,8 +295,6 @@ export default function Home() {
 
         <SearchBar query={query} onChange={setQuery} isMobile={isMobile} />
       </div>
-
-      <ProWaitlist source="home" isMobile={isMobile} />
     </div>
   )
 }
