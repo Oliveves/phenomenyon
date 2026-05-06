@@ -319,7 +319,7 @@ function Splash({ fading }: { fading: boolean }) {
         src="/logo.svg"
         alt="Phenomenyon stu."
         style={{
-          width: "clamp(150px, 23vw, 340px)",
+          width: "clamp(120px, 18vw, 280px)",
           height: "auto",
           filter: "invert(1)",
         }}
