@@ -11,9 +11,9 @@ import {
 
 const GITHUB_URL = "https://github.com/Oliveves/phenomenyon-components"
 const RELEASE_URL =
-  "https://github.com/Oliveves/phenomenyon-components/releases"
+  "https://github.com/Oliveves/phenomenyon-components/releases/tag/v0.2.0"
 
-const REACT_USAGE_SNIPPET = `import OrbitButton from "./OrbitButton"
+const REACT_USAGE_SNIPPET = `import { OrbitButton } from "@phenomenyon/components"
 
 export default function CTA() {
   return (
@@ -24,8 +24,7 @@ export default function CTA() {
   )
 }`
 
-const REACT_INSTALL_SNIPPET = `# Download from GitHub
-https://github.com/Oliveves/phenomenyon-components`
+const REACT_INSTALL_SNIPPET = `npm install github:Oliveves/phenomenyon-components#v0.2.0`
 
 const COLORWAY_SNIPPET = `<OrbitButton
   variant="holographic"
@@ -218,82 +217,137 @@ function FloatingNav() {
   )
 }
 
-/* ---------- Section 1 · Hero with two button variants ---------- */
+/* ---------- Section 1 · Hero (matches SilkWave: full-bleed + bottom switcher) ---------- */
 
 function HeroSection({ isMobile }: { isMobile: boolean }) {
+  const [activeId, setActiveId] = useState<string>(COLORWAYS[0].id)
+  const cw = COLORWAYS.find((c) => c.id === activeId) ?? COLORWAYS[0]
+  const textColor = cw.panelText
+
   return (
     <section
       style={{
         position: "relative",
         width: "100vw",
-        minHeight: "100vh",
-        background: COLORS.bg,
-        color: COLORS.text,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: isMobile ? "120px 24px 96px" : "160px 60px 120px",
-        boxSizing: "border-box",
+        height: "100vh",
+        overflow: "hidden",
+        background: cw.panelBg,
+        transition: "background 600ms ease",
       }}
     >
+      {/* top-left label */}
       <div
         style={{
-          width: "100%",
-          maxWidth: 1100,
+          position: "absolute",
+          top: isMobile ? 88 : 96,
+          left: isMobile ? 24 : 48,
+          zIndex: 1,
+          ...LABEL_LG,
+          color: textColor,
+          opacity: 0.75,
+          transition: "color 600ms ease",
+          pointerEvents: "none",
+        }}
+      >
+        01 · Orbit Button
+      </div>
+
+      {/* centered headline + live button */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: isMobile ? 48 : 72,
-          textAlign: "center",
+          justifyContent: "center",
+          gap: isMobile ? 36 : 56,
+          padding: isMobile ? "0 24px" : "0 48px",
+          zIndex: 1,
         }}
       >
-        <div>
-          <p
-            style={{
-              ...LABEL_LG,
-              color: COLORS.silver,
-              opacity: 0.75,
-              margin: 0,
-            }}
-          >
-            04 · Orbit Button
-          </p>
-          <h1
-            style={{
-              ...TYPE.h1,
-              fontStyle: "italic",
-              color: COLORS.text,
-              margin: "32px 0 0",
-            }}
-          >
-            Light, in orbit.
-          </h1>
-          <p
-            style={{
-              ...TAG_LG,
-              color: COLORS.silver,
-              opacity: 0.8,
-              margin: "28px auto 0",
-              maxWidth: 620,
-            }}
-          >
-            A button with a single streak of light tracing its edge — solid or
-            holographic, paused by <code style={{ fontFamily: FONT_MONO }}>prefers-reduced-motion</code>.
-          </p>
-        </div>
-
-        <div
+        <h1
           style={{
-            display: "flex",
-            flexDirection: isMobile ? "column" : "row",
-            gap: isMobile ? 20 : 28,
-            alignItems: "center",
-            justifyContent: "center",
+            ...TYPE.h1,
+            fontStyle: "italic",
+            color: textColor,
+            margin: 0,
+            textAlign: "center",
+            transition: "color 600ms ease",
           }}
         >
-          <OrbitButton variant="solid">Enter the field</OrbitButton>
-          <OrbitButton variant="holographic">Reserve invitation</OrbitButton>
-        </div>
+          Light, in orbit.
+        </h1>
+        <OrbitButton
+          variant={cw.variant}
+          background={cw.background}
+          textColor={cw.textColor}
+          accentColor={cw.accentColor}
+          hologramColors={cw.hologramColors}
+          height={isMobile ? 52 : 60}
+          paddingInline={isMobile ? 32 : 44}
+          fontSize={isMobile ? 18 : 20}
+        >
+          {cw.label}
+        </OrbitButton>
+      </div>
+
+      {/* dot-indicator colorway switcher */}
+      <div
+        style={{
+          position: "absolute",
+          left: "50%",
+          bottom: isMobile ? 60 : 80,
+          transform: "translateX(-50%)",
+          display: "flex",
+          gap: isMobile ? 24 : 60,
+          zIndex: 2,
+        }}
+      >
+        {COLORWAYS.map((c) => {
+          const active = c.id === activeId
+          return (
+            <button
+              key={c.id}
+              type="button"
+              aria-label={`${c.label} colorway`}
+              aria-pressed={active}
+              onClick={() => setActiveId(c.id)}
+              style={{
+                position: "relative",
+                background: "transparent",
+                border: "none",
+                padding: "14px 6px 8px",
+                cursor: "pointer",
+                fontFamily: FONT_MONO,
+                fontSize: isMobile ? 12 : 14,
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+                color: textColor,
+                opacity: active ? 1 : 0.5,
+                transition: "opacity 0.25s, color 600ms ease",
+                outline: "none",
+              }}
+            >
+              <span
+                aria-hidden
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: 4,
+                  height: 4,
+                  borderRadius: "50%",
+                  background: "currentColor",
+                  opacity: active ? 1 : 0,
+                  transition: "opacity 0.3s ease",
+                }}
+              />
+              {c.label.toLowerCase()}
+            </button>
+          )
+        })}
       </div>
     </section>
   )

@@ -14,15 +14,14 @@ import {
 
 const GITHUB_URL = "https://github.com/Oliveves/phenomenyon-components"
 const RELEASE_URL =
-  "https://github.com/Oliveves/phenomenyon-components/releases/tag/v0.1.0"
+  "https://github.com/Oliveves/phenomenyon-components/releases/tag/v0.2.0"
 
-const CDN_SNIPPET = `<script src="https://cdn.jsdelivr.net/gh/Oliveves/phenomenyon-components@v0.1.0/silkwave-html/silkwave.min.js"></script>
+const CDN_SNIPPET = `<script src="https://cdn.jsdelivr.net/gh/Oliveves/phenomenyon-components@v0.2.0/silkwave-html/silkwave.min.js"></script>
 <div data-silkwave="champagne"></div>`
 
-const REACT_INSTALL_SNIPPET = `# Download from GitHub Release
-https://github.com/Oliveves/phenomenyon-components/releases/tag/v0.1.0`
+const REACT_INSTALL_SNIPPET = `npm install github:Oliveves/phenomenyon-components#v0.2.0`
 
-const REACT_USAGE_SNIPPET = `import SilkWave from "./SilkWave"
+const REACT_USAGE_SNIPPET = `import { SilkWave } from "@phenomenyon/components"
 
 export default function Hero() {
   return <SilkWave theme="champagne" />
