@@ -96,7 +96,14 @@ const sourceCategories: Record<string, Category> = {
 }
 
 const SOURCE_KEYS = Object.keys(sourceCategories)
-const ALL_ITEMS: Item[] = SOURCE_KEYS.flatMap((k) => sourceCategories[k].items)
+const ALL_ITEMS: Item[] = SOURCE_KEYS.flatMap(
+  (k) => sourceCategories[k].items,
+).slice().sort((a, b) => {
+  if (a.date && b.date) return b.date.localeCompare(a.date)
+  if (a.date) return -1
+  if (b.date) return 1
+  return 0
+})
 
 const categories: Record<string, Category> = {
   all: { label: "All", items: ALL_ITEMS },
@@ -130,7 +137,7 @@ export default function Home() {
   const isMobile = useIsMobile()
 
   const [query, setQuery] = useState("")
-  const [activeCategory, setActiveCategory] = useState<string>("backgrounds")
+  const [activeCategory, setActiveCategory] = useState<string>("all")
   const isSearching = query.trim().length > 0
 
   const displayItems = useMemo(() => {
