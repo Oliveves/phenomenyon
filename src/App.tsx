@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Home from "./pages/Home"
 import SilkWavePage from "./pages/components/SilkWave"
+import OrbitButtonPage from "./pages/components/OrbitButton"
 
 export default function App() {
   return (
@@ -8,6 +9,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/components/silk-wave" element={<SilkWavePage />} />
+        <Route path="/components/orbit-button" element={<OrbitButtonPage />} />
       </Routes>
     </BrowserRouter>
   )

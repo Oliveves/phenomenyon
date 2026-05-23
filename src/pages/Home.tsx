@@ -79,7 +79,15 @@ const categories: Record<string, Category> = {
   buttons: {
     label: "Buttons",
     items: [
-      { id: "cs9", name: "Glow Button", desc: "Coming soon", available: false },
+      {
+        id: "orbit-button",
+        name: "Orbit Button",
+        desc: "Free · MIT. A streak of light orbiting the edge — solid or holographic.",
+        path: "/components/orbit-button",
+        available: true,
+        date: "2026-05-23",
+        popular: 2,
+      },
       { id: "cs10", name: "Liquid Button", desc: "Coming soon", available: false },
       { id: "cs11", name: "Split Button", desc: "Coming soon", available: false },
     ],
