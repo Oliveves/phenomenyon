@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import SilkWave from "../components/SilkWave"
+import OrbitButton from "../components/OrbitButton"
 import { COLORS, FONT_SANS, FONT_SERIF, TYPE } from "../theme"
 
 function useIsMobile() {
@@ -504,6 +505,7 @@ const THEME_DOT: Record<(typeof THEMES)[number], string> = {
 
 function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
   const isSilkWave = item.id === "silk-wave"
+  const isOrbitButton = item.id === "orbit-button"
   const clickable = item.available && !!item.path
   const navigate = useNavigate()
   const [activeTheme, setActiveTheme] = useState<(typeof THEMES)[number]>("champagne")
@@ -626,6 +628,41 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
       >
         {isSilkWave ? (
           <SilkWave fill theme={activeTheme} speed={0.006} noiseOpacity={0.02} />
+        ) : isOrbitButton ? (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: isMobile ? 14 : 22,
+              flexWrap: "wrap",
+              background: "#0E0E0E",
+              padding: "0 16px",
+            }}
+          >
+            <OrbitButton
+              variant="solid"
+              background="#1A1A1A"
+              textColor={COLORS.text}
+              height={44}
+              paddingInline={22}
+              fontSize={15}
+            >
+              Solid
+            </OrbitButton>
+            <OrbitButton
+              variant="holographic"
+              background="#1A1A1A"
+              textColor={COLORS.text}
+              height={44}
+              paddingInline={22}
+              fontSize={15}
+            >
+              Holographic
+            </OrbitButton>
+          </div>
         ) : (
           <div
             style={{
@@ -645,7 +682,7 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
           </div>
         )}
 
-        {isSilkWave && item.available && (
+        {(isSilkWave || isOrbitButton) && item.available && (
           <span
             style={{
               position: "absolute",
