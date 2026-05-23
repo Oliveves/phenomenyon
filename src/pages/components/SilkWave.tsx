@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import SilkWave from "../../components/SilkWave"
+import { SilkWave } from "@phenomenyon/components"
 import {
   COLORS,
   FONT_MONO,

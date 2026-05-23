@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import OrbitButton from "../../components/OrbitButton"
+import { OrbitButton } from "@phenomenyon/components"
 import {
   COLORS,
   FONT_MONO,

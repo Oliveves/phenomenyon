@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
-import SilkWave from "../components/SilkWave"
-import OrbitButton from "../components/OrbitButton"
+import { OrbitButton, SilkWave } from "@phenomenyon/components"
 import { COLORS, FONT_SANS, FONT_SERIF, TYPE } from "../theme"
 
 function useIsMobile() {
