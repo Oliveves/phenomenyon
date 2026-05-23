@@ -6,6 +6,7 @@ import {
   FONT_MONO,
   FONT_SANS,
   FONT_SERIF,
+  SILKWAVE_THEMES,
   THEME_TEXT_COLOR,
   TYPE,
   type ThemeKey,
@@ -444,6 +445,7 @@ function ThemesShowcase({ isMobile }: { isMobile: boolean }) {
                 width: "100%",
                 height: isMobile ? "240px" : "clamp(260px, 38vh, 420px)",
                 overflow: "hidden",
+                background: SILKWAVE_THEMES[theme].bg3,
               }}
             >
               <SilkWave fill theme={theme} speed={0.006} noiseOpacity={0.02} />

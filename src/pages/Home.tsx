@@ -44,7 +44,7 @@ type Category = {
   items: Item[]
 }
 
-const categories: Record<string, Category> = {
+const sourceCategories: Record<string, Category> = {
   backgrounds: {
     label: "Backgrounds",
     items: [
@@ -95,6 +95,14 @@ const categories: Record<string, Category> = {
   },
 }
 
+const SOURCE_KEYS = Object.keys(sourceCategories)
+const ALL_ITEMS: Item[] = SOURCE_KEYS.flatMap((k) => sourceCategories[k].items)
+
+const categories: Record<string, Category> = {
+  all: { label: "All", items: ALL_ITEMS },
+  ...sourceCategories,
+}
+
 const CATEGORY_KEYS = Object.keys(categories)
 
 export default function Home() {
@@ -129,8 +137,8 @@ export default function Home() {
     if (isSearching) {
       const q = query.trim().toLowerCase()
       const flat: Item[] = []
-      for (const key of CATEGORY_KEYS) {
-        for (const it of categories[key].items) {
+      for (const key of SOURCE_KEYS) {
+        for (const it of sourceCategories[key].items) {
           if (
             it.name.toLowerCase().includes(q) ||
             it.desc.toLowerCase().includes(q)
