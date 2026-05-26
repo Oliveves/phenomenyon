@@ -740,21 +740,29 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
               position: "absolute",
               inset: 0,
               display: "flex",
-              alignItems: "flex-end",
+              alignItems: "center",
               justifyContent: "center",
-              gap: isMobile ? 40 : 72,
               background: "#0E0E0E",
-              padding: isMobile ? "0 16px 28px" : "0 16px 40px",
+              padding: "0 16px",
             }}
           >
-            {SCROLL_VARIANTS.map((v) => (
-              <ScrollIndicator
-                key={v}
-                variant={v}
-                color={COLORS.text}
-                label={v}
-              />
-            ))}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "flex-end",
+                justifyContent: "center",
+                gap: isMobile ? 40 : 72,
+              }}
+            >
+              {SCROLL_VARIANTS.map((v) => (
+                <ScrollIndicator
+                  key={v}
+                  variant={v}
+                  color={COLORS.text}
+                  label={v}
+                />
+              ))}
+            </div>
           </div>
         ) : (
           <div
