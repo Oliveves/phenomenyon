@@ -740,11 +740,11 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
               position: "absolute",
               inset: 0,
               display: "flex",
-              alignItems: "center",
+              alignItems: "flex-end",
               justifyContent: "center",
               gap: isMobile ? 40 : 72,
               background: "#0E0E0E",
-              padding: "0 16px",
+              padding: isMobile ? "0 16px 28px" : "0 16px 40px",
             }}
           >
             {SCROLL_VARIANTS.map((v) => (
