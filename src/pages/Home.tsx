@@ -111,6 +111,51 @@ const categories: Record<string, Category> = {
 
 const CATEGORY_KEYS = Object.keys(categories)
 
+type OrbitColorway = {
+  id: string
+  label: string
+  variant: "solid" | "holographic"
+  background: string
+  textColor: string
+  accentColor?: string
+  hologramColors?: string[]
+}
+
+const ORBIT_COLORWAYS: OrbitColorway[] = [
+  {
+    id: "champagne",
+    label: "Champagne",
+    variant: "holographic",
+    background: "#1B1206",
+    textColor: "#F2E2C6",
+    hologramColors: ["#FFE6A8", "#E8C58B", "#B68A4F", "#FFE6A8"],
+  },
+  {
+    id: "midnight",
+    label: "Midnight",
+    variant: "holographic",
+    background: "#0A0F1E",
+    textColor: "#DCE7F5",
+    hologramColors: ["#A8C8FF", "#C8B6FF", "#B6FFEE", "#FFFFFF"],
+  },
+  {
+    id: "plum",
+    label: "Plum",
+    variant: "holographic",
+    background: "#1A0E1F",
+    textColor: "#EFE0F2",
+    hologramColors: ["#FFB6E1", "#C8B6FF", "#9D7DFF", "#FFB6E1"],
+  },
+  {
+    id: "forest",
+    label: "Forest",
+    variant: "solid",
+    background: "#0B1810",
+    textColor: "#D7EAD9",
+    accentColor: "#B8E8B0",
+  },
+]
+
 export default function Home() {
   const [splash, setSplash] = useState(() => {
     if (typeof window === "undefined") return false
@@ -650,32 +695,27 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              gap: isMobile ? 14 : 22,
+              gap: isMobile ? "12px 14px" : "16px 18px",
               flexWrap: "wrap",
               background: "#0E0E0E",
               padding: "0 16px",
             }}
           >
-            <OrbitButton
-              variant="solid"
-              background="#1A1A1A"
-              textColor={COLORS.text}
-              height={44}
-              paddingInline={22}
-              fontSize={15}
-            >
-              Solid
-            </OrbitButton>
-            <OrbitButton
-              variant="holographic"
-              background="#1A1A1A"
-              textColor={COLORS.text}
-              height={44}
-              paddingInline={22}
-              fontSize={15}
-            >
-              Holographic
-            </OrbitButton>
+            {ORBIT_COLORWAYS.map((cw) => (
+              <OrbitButton
+                key={cw.id}
+                variant={cw.variant}
+                background={cw.background}
+                textColor={cw.textColor}
+                accentColor={cw.accentColor}
+                hologramColors={cw.hologramColors}
+                height={40}
+                paddingInline={18}
+                fontSize={13}
+              >
+                {cw.label}
+              </OrbitButton>
+            ))}
           </div>
         ) : (
           <div
