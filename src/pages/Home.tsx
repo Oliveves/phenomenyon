@@ -1,7 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
-import { OrbitButton, SilkWave } from "@phenomenyon/components"
+import {
+  OrbitButton,
+  ScrollIndicator,
+  type ScrollIndicatorVariant,
+  SilkWave,
+} from "@phenomenyon/components"
 import { COLORS, FONT_SANS, FONT_SERIF, TYPE } from "../theme"
 
 function useIsMobile() {
@@ -63,6 +68,15 @@ const sourceCategories: Record<string, Category> = {
   interactions: {
     label: "Interactions",
     items: [
+      {
+        id: "scroll-indicator",
+        name: "Scroll Indicator",
+        desc: "Free · MIT. Scroll-down hint — mouse, chevron, or line.",
+        path: "/components/scroll-indicator",
+        available: true,
+        date: "2026-05-26",
+        popular: 3,
+      },
       { id: "cs3", name: "Magnetic Button", desc: "Coming soon", available: false },
       { id: "cs4", name: "Cursor Follower", desc: "Coming soon", available: false },
       { id: "cs5", name: "Image Hover Reveal", desc: "Coming soon", available: false },
@@ -120,6 +134,8 @@ type OrbitColorway = {
   accentColor?: string
   hologramColors?: string[]
 }
+
+const SCROLL_VARIANTS: ScrollIndicatorVariant[] = ["mouse", "chevron", "line"]
 
 const ORBIT_COLORWAYS: OrbitColorway[] = [
   {
@@ -565,6 +581,7 @@ const THEME_DOT: Record<(typeof THEMES)[number], string> = {
 function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
   const isSilkWave = item.id === "silk-wave"
   const isOrbitButton = item.id === "orbit-button"
+  const isScrollIndicator = item.id === "scroll-indicator"
   const clickable = item.available && !!item.path
   const navigate = useNavigate()
   const [activeTheme, setActiveTheme] = useState<(typeof THEMES)[number]>("champagne")
@@ -717,6 +734,28 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
               </OrbitButton>
             ))}
           </div>
+        ) : isScrollIndicator ? (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: isMobile ? 40 : 72,
+              background: "#0E0E0E",
+              padding: "0 16px",
+            }}
+          >
+            {SCROLL_VARIANTS.map((v) => (
+              <ScrollIndicator
+                key={v}
+                variant={v}
+                color={COLORS.text}
+                label={v}
+              />
+            ))}
+          </div>
         ) : (
           <div
             style={{
@@ -736,7 +775,8 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
           </div>
         )}
 
-        {(isSilkWave || isOrbitButton) && item.available && (
+        {(isSilkWave || isOrbitButton || isScrollIndicator) &&
+          item.available && (
           <span
             style={{
               position: "absolute",
