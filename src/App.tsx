@@ -3,6 +3,7 @@ import Home from "./pages/Home"
 import SilkWavePage from "./pages/components/SilkWave"
 import OrbitButtonPage from "./pages/components/OrbitButton"
 import ScrollIndicatorPage from "./pages/components/ScrollIndicator"
+import LiquidOrbPage from "./pages/components/LiquidOrb"
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
           path="/components/scroll-indicator"
           element={<ScrollIndicatorPage />}
         />
+        <Route path="/components/liquid-orb" element={<LiquidOrbPage />} />
       </Routes>
     </BrowserRouter>
   )

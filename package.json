@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@phenomenyon/components": "github:Oliveves/phenomenyon-components#v0.3.0",
+    "@phenomenyon/components": "github:Oliveves/phenomenyon-components#v0.4.0",
     "@supabase/supabase-js": "^2.104.1",
     "framer-motion": "^12.38.0",
     "react": "^19.2.5",

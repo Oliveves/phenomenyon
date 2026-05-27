@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import {
+  LiquidOrb,
   OrbitButton,
   ScrollIndicator,
   type ScrollIndicatorVariant,
@@ -52,6 +53,15 @@ const sourceCategories: Record<string, Category> = {
   backgrounds: {
     label: "Backgrounds",
     items: [
+      {
+        id: "liquid-orb",
+        name: "Liquid Orb",
+        desc: "Free · MIT. Cursor-reactive liquid blob — 5 palettes, 3 shapes.",
+        path: "/components/liquid-orb",
+        available: true,
+        date: "2026-05-27",
+        popular: 4,
+      },
       {
         id: "silk-wave",
         name: "Silk Wave",
@@ -582,6 +592,7 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
   const isSilkWave = item.id === "silk-wave"
   const isOrbitButton = item.id === "orbit-button"
   const isScrollIndicator = item.id === "scroll-indicator"
+  const isLiquidOrb = item.id === "liquid-orb"
   const clickable = item.available && !!item.path
   const navigate = useNavigate()
   const [activeTheme, setActiveTheme] = useState<(typeof THEMES)[number]>("champagne")
@@ -704,6 +715,8 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
       >
         {isSilkWave ? (
           <SilkWave fill theme={activeTheme} speed={0.006} noiseOpacity={0.02} />
+        ) : isLiquidOrb ? (
+          <LiquidOrb fill palette="sunset" shape="blob" background="#0A0A0A" />
         ) : isOrbitButton ? (
           <div
             style={{
@@ -783,7 +796,7 @@ function Card({ item, isMobile }: { item: Item; isMobile: boolean }) {
           </div>
         )}
 
-        {(isSilkWave || isOrbitButton || isScrollIndicator) &&
+        {(isSilkWave || isOrbitButton || isScrollIndicator || isLiquidOrb) &&
           item.available && (
           <span
             style={{
